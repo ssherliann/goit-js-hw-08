@@ -73,15 +73,21 @@ gallery.addEventListener('click', function(event) {
     const target = event.target;
     if (target.classList.contains('gallery-image')) {
         const largeImageSrc = target.dataset.source;
-        lightbox = basicLightbox.create(`<img src="${largeImageSrc}"">`)
-        lightbox.show()
+        lightbox = basicLightbox.create(`<img src="${largeImageSrc}">`, {
+            onShow: () => {
+                document.addEventListener("keydown", keyDown);
+            },
+            onClose: () => {
+                document.removeEventListener("keydown", keyDown);
+            },
+        });
+        lightbox.show();
     }
-    document.addEventListener("keydown", keyDown);
 });
 
 function keyDown(event) {
     if (event.key === "Escape") {
-        if (lightbox.visible()) {
+        if (lightbox && lightbox.visible()) {
             lightbox.close();
         }
     }
